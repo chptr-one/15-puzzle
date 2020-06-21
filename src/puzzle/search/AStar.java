@@ -3,8 +3,6 @@ package puzzle.search;
 import puzzle.Board;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AStar implements SearchAlgorithm {
     private final Board start;
@@ -30,11 +28,7 @@ public class AStar implements SearchAlgorithm {
             }
         }
         SearchNode endNode = minPQ.poll();
-        List<Board> result = Stream.iterate(endNode, n -> n.getParent() != null, SearchNode::getParent)
-                .map(SearchNode::getValue)
-                .collect(Collectors.toList());
-        Collections.reverse(result);
-        return result;
+        return getSolution(endNode);
     }
 
     @Override
