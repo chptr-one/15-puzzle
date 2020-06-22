@@ -44,7 +44,7 @@ public class BoardTest {
 
     @Test
     void moveTileTest() {
-        byte[] arr = {1, 2, 3, 4, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+        byte[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0};
         Board initial = new Board(arr);
 
         // invalid index, return initial board
@@ -60,23 +60,27 @@ public class BoardTest {
         assertSame(initial, result);
 
         // not valid move, return initial board
-        result = initial.moveTile(2, 3);
+        result = initial.moveTile(2, 2);
         assertSame(initial, result);
 
         // not valid move (empty tile coordinates), return initial board
-        result = initial.moveTile(1, 1);
+        result = initial.moveTile(3, 3);
         assertSame(initial, result);
 
         // valid moves, return new Board
-        result = initial.moveTile(0, 1);
+        result = initial.moveTile(2, 3);
         assertNotSame(initial, result);
-        assertArrayEquals(new byte[]{1, 0, 3, 4, 5, 2, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}, result.getTiles());
-        result = initial.moveTile(1, 3);
-        assertNotSame(initial, result);
-        assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6, 7, 0, 8, 9, 10, 11, 12, 13, 14, 15}, result.getTiles());
-        result = initial.moveTile(3, 1);
-        assertNotSame(initial, result);
-        assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 9, 6, 7, 8, 13, 10, 11, 12, 0, 14, 15}, result.getTiles());
+        assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 13, 14, 15, 12}, result.getTiles());
+        result = result.moveTile(3,3);
+        assertArrayEquals(initial.getTiles(), result.getTiles());
+        result = result.moveTile(3,0);
+        assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 13, 14, 15}, result.getTiles());
+        result = result.moveTile(3,3);
+        assertArrayEquals(initial.getTiles(), result.getTiles());
+        result = result.moveTile(1,3);
+        assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6, 7, 0, 9, 10, 11, 8, 13, 14, 15, 12}, result.getTiles());
+        result = result.moveTile(3,3);
+        assertArrayEquals(initial.getTiles(), result.getTiles());
     }
 
     @Test

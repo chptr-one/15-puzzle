@@ -34,7 +34,7 @@ public class Board {
         }
         if (i < tiles.length) {
             this.dimension = (int) dim;
-            this.tiles = tiles.clone();
+            this.tiles = tiles.clone(); // Возможно, копирование не нужно. Убедиться, что массив плиток внутри борды никогда не меняется
             emptyTileIndex = i;
         } else {
             throw new IllegalArgumentException("Empty tile not found.");
@@ -75,10 +75,8 @@ public class Board {
             return this;
         }
 
-        int emptyTile = getEmptyTileIndex();
-        int emptyRow = emptyTile / dimension;
-        int emptyCol = emptyTile % dimension;
-
+        int emptyRow = emptyTileIndex / dimension;
+        int emptyCol = emptyTileIndex % dimension;
         int directionRow = row - emptyRow;
         int directionCol = col - emptyCol;
         directionRow = directionRow == 0 ? directionRow : directionRow / Math.abs(directionRow);
@@ -87,10 +85,9 @@ public class Board {
         Board result = this;
         if (directionRow == 0 ^ directionCol == 0) {
             while (row != emptyRow || col != emptyCol) {
-                result = result.swapTiles(emptyTile, toIndex(emptyRow + directionRow, emptyCol + directionCol));
+                result = result.swapTiles(result.getEmptyTileIndex(), toIndex(emptyRow + directionRow, emptyCol + directionCol));
                 emptyRow += directionRow;
                 emptyCol += directionCol;
-                emptyTile = toIndex(emptyRow, emptyCol);
             }
         }
         return result;
@@ -101,11 +98,11 @@ public class Board {
     }
 
     private Board swapTiles(int i1, int i2) {
-        Board result = new Board(tiles);
-        byte temp = result.tiles[i1];
-        result.tiles[i1] = result.tiles[i2];
-        result.tiles[i2] = temp;
-        return result;
+        byte[] newTiles = tiles.clone();
+        byte temp = newTiles[i1];
+        newTiles[i1] = newTiles[i2];
+        newTiles[i2] = temp;
+        return new Board(newTiles);
     }
 
     public boolean isSolvable() {
