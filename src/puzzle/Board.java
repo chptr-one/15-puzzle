@@ -5,6 +5,7 @@ import java.util.*;
 public class Board {
     private final int dimension;
     private final byte[] tiles;
+    private final int emptyTileIndex;
 
     public Board(int dimension) {
         if (dimension < 2) {
@@ -12,9 +13,13 @@ public class Board {
         }
         this.dimension = dimension;
         this.tiles = createGoal();
+        emptyTileIndex = tiles.length - 1;
     }
 
     public Board(byte[] tiles) {
+        if (tiles == null) {
+            throw new IllegalArgumentException("Argument array is null.");
+        }
         double dim = Math.sqrt(tiles.length);
         if (dim % 1 != 0) {
             throw new IllegalArgumentException("Argument array is not square.");
@@ -22,8 +27,18 @@ public class Board {
         if (dim < 2) {
             throw new IllegalArgumentException("Board dimension must be 2 or greater.");
         }
-        this.dimension = (int) dim;
-        this.tiles = tiles.clone();
+        // find empty Tile
+        int i = 0;
+        while (i < tiles.length && tiles[i] != 0) {
+            i++;
+        }
+        if (i < tiles.length) {
+            this.dimension = (int) dim;
+            this.tiles = tiles.clone();
+            emptyTileIndex = i;
+        } else {
+            throw new IllegalArgumentException("Empty tile not found.");
+        }
     }
 
     private byte[] createGoal() {
@@ -37,7 +52,7 @@ public class Board {
 
     public Set<Board> getSuccessors() {
         Set<Board> successors = new HashSet<>();
-        int emptyTile = findEmptyTile();
+        int emptyTile = getEmptyTileIndex();
         int rowEmpty = emptyTile / dimension;
         int colEmpty = emptyTile % dimension;
         if (rowEmpty > 0) {
@@ -60,7 +75,7 @@ public class Board {
             return this;
         }
 
-        int emptyTile = findEmptyTile();
+        int emptyTile = getEmptyTileIndex();
         int emptyRow = emptyTile / dimension;
         int emptyCol = emptyTile % dimension;
 
@@ -136,13 +151,8 @@ public class Board {
         return row * dimension + col;
     }
 
-    private int findEmptyTile() {
-        for (int i = 0; i < tiles.length; i++) {
-            if (tiles[i] == 0) {
-                return i;
-            }
-        }
-        return -1; // No empty tile found. WTF?
+    public int getEmptyTileIndex() {
+        return emptyTileIndex;
     }
 
     @Override
