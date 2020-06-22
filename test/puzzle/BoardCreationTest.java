@@ -23,13 +23,13 @@ class BoardCreationTest {
     void boardCreationFromIncorrectDimension() {
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 new Board(1));
-        assertEquals("Board dimension must be 2 or greater.", exception.getMessage());
+        assertEquals("Dimension must be 2 or greater.", exception.getMessage());
         exception = assertThrows(IllegalArgumentException.class, () ->
                 new Board(0));
-        assertEquals("Board dimension must be 2 or greater.", exception.getMessage());
+        assertEquals("Dimension must be 2 or greater.", exception.getMessage());
         exception = assertThrows(IllegalArgumentException.class, () ->
                 new Board(-1));
-        assertEquals("Board dimension must be 2 or greater.", exception.getMessage());
+        assertEquals("Dimension must be 2 or greater.", exception.getMessage());
     }
 
     @Test
@@ -58,26 +58,30 @@ class BoardCreationTest {
         for (byte[] tile : nonSquareTiles) {
             Exception exception = assertThrows(IllegalArgumentException.class, () ->
                     new Board(tile));
-            assertEquals("Argument array is not square.", exception.getMessage());
+            assertEquals("Array is not square.", exception.getMessage());
         }
 
         byte[] incorrectDimensionTiles = {1};
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 new Board(incorrectDimensionTiles));
-        assertEquals("Board dimension must be 2 or greater.", exception.getMessage());
+        assertEquals("Dimension must be 2 or greater.", exception.getMessage());
     }
 
     @Test
-    void boardCreationFromArrayWithNoEmptyTile() {
+    void boardCreationFromArrayWithIncorrectValues() {
         byte[][] noEmptyTiles = {
                 {1, 2, 3, 4},
+                {0, 1, 1, 2},
+                {0, 1, 2, 4},
                 {1, 2, 3, 4, 5, 6, 7, 8, 9},
-                {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
+                {1, 2, 3, 4, 0, 6, 7, 8, 9},
+                {1, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+                {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
         };
         for (byte[] tile : noEmptyTiles) {
             Exception exception = assertThrows(IllegalArgumentException.class, () ->
                     new Board(tile));
-            assertEquals("Empty tile not found.", exception.getMessage());
+            assertEquals("Array must contains unique numbers from 0 to array.length() - 1.", exception.getMessage());
         }
     }
 
@@ -86,13 +90,13 @@ class BoardCreationTest {
         byte[] empty = {};
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 new Board(empty));
-        assertEquals("Board dimension must be 2 or greater.", exception.getMessage());
+        assertEquals("Dimension must be 2 or greater.", exception.getMessage());
     }
 
     @Test
     void boardCreationFormNull() {
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 new Board(null));
-        assertEquals("Argument array is null.", exception.getMessage());
+        assertEquals("Argument is null.", exception.getMessage());
     }
 }

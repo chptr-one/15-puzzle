@@ -1,93 +1,127 @@
 package puzzle;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Board {
     private final int dimension;
     private final byte[] tiles;
     private final int emptyTileIndex;
 
+    /*
+    Creates resolved Board of given dimension with empty tile in right-bottom corner
+    */
     public Board(int dimension) {
         if (dimension < 2) {
-            throw new IllegalArgumentException("Board dimension must be 2 or greater.");
+            throw new IllegalArgumentException("Dimension must be 2 or greater.");
         }
         this.dimension = dimension;
-        this.tiles = createGoal();
-        emptyTileIndex = tiles.length - 1;
+        this.tiles = createSolvedTiles();
+        this.emptyTileIndex = tiles.length - 1;
     }
 
+    /*
+    Creates new Board from given array.
+    Array must be square with dimension 2x2 or greater,
+    and can contain only unique numbers from 0 to dimension * dimension - 1 in any order.
+    */
     public Board(byte[] tiles) {
         if (tiles == null) {
-            throw new IllegalArgumentException("Argument array is null.");
+            throw new IllegalArgumentException("Argument is null.");
         }
         double dim = Math.sqrt(tiles.length);
         if (dim % 1 != 0) {
-            throw new IllegalArgumentException("Argument array is not square.");
+            throw new IllegalArgumentException("Array is not square.");
         }
         if (dim < 2) {
-            throw new IllegalArgumentException("Board dimension must be 2 or greater.");
+            throw new IllegalArgumentException("Dimension must be 2 or greater.");
         }
-        // find empty Tile
+
+        // checking the numbers in tiles for compliance with the restriction
+        Set<Integer> correct = IntStream.range(0, tiles.length).boxed().collect(Collectors.toSet());
+        Set<Integer> actual = IntStream.range(0, tiles.length).map(i -> tiles[i]).boxed().collect(Collectors.toSet());
+        if (!correct.equals(actual)) {
+            throw new IllegalArgumentException("Array must contains unique numbers from 0 to array.length() - 1.");
+        }
+        this.dimension = (int) dim;
+        this.tiles = tiles.clone();
+
+        // find an empty Tile
         int i = 0;
         while (i < tiles.length && tiles[i] != 0) {
             i++;
         }
-        if (i < tiles.length) {
-            this.dimension = (int) dim;
-            this.tiles = tiles.clone(); // Возможно, копирование не нужно. Убедиться, что массив плиток внутри борды никогда не меняется
-            emptyTileIndex = i;
-        } else {
-            throw new IllegalArgumentException("Empty tile not found.");
-        }
+        emptyTileIndex = i;
     }
 
-    private byte[] createGoal() {
-        byte[] state = new byte[dimension * dimension];
-        for (byte i = 0; i < state.length; i++) {
-            state[i] = (byte) (i + 1);
-        }
-        state[state.length - 1] = 0;
-        return state;
+    /*
+    Creates new Board from given array without any arguments check.
+    Used by swapTiles() method.
+    */
+    private Board(byte[] tiles, int dimension, int emptyTileIndex) {
+        this.tiles = tiles;
+        this.dimension = dimension;
+        this.emptyTileIndex = emptyTileIndex;
     }
 
+    private byte[] createSolvedTiles() {
+        byte[] tiles = new byte[dimension * dimension];
+        for (byte i = 0; i < tiles.length; i++) {
+            tiles[i] = (byte) (i + 1);
+        }
+        tiles[tiles.length - 1] = 0;
+        return tiles;
+    }
+
+    /*
+    Returns the set of all boards that can be reached from the current board by making a valid move.
+    A move -- is to swap exactly one tile with an adjacent empty tile.
+    There is always at least one possible move, so we return at least one board.
+    */
     public Set<Board> getSuccessors() {
         Set<Board> successors = new HashSet<>();
-        int emptyTile = getEmptyTileIndex();
-        int rowEmpty = emptyTile / dimension;
-        int colEmpty = emptyTile % dimension;
-        if (rowEmpty > 0) {
-            successors.add(swapTiles(emptyTile, toIndex(rowEmpty - 1, colEmpty)));
+
+        int emptyTileRow = emptyTileIndex / dimension;
+        int emptyTileCol = emptyTileIndex % dimension;
+        if (emptyTileRow > 0) {
+            successors.add(swapTiles(emptyTileIndex, toIndex(emptyTileRow - 1, emptyTileCol)));
         }
-        if (rowEmpty < dimension - 1) {
-            successors.add(swapTiles(emptyTile, toIndex(rowEmpty + 1, colEmpty)));
+        if (emptyTileRow < dimension - 1) {
+            successors.add(swapTiles(emptyTileIndex, toIndex(emptyTileRow + 1, emptyTileCol)));
         }
-        if (colEmpty > 0) {
-            successors.add(swapTiles(emptyTile, toIndex(rowEmpty, colEmpty - 1)));
+        if (emptyTileCol > 0) {
+            successors.add(swapTiles(emptyTileIndex, toIndex(emptyTileRow, emptyTileCol - 1)));
         }
-        if (colEmpty < dimension - 1) {
-            successors.add(swapTiles(emptyTile, toIndex(rowEmpty, colEmpty + 1)));
+        if (emptyTileCol < dimension - 1) {
+            successors.add(swapTiles(emptyTileIndex, toIndex(emptyTileRow, emptyTileCol + 1)));
         }
         return successors;
     }
 
+    /*
+    If possible, tries to make a move with a tile with the given coordinates.
+    Can move multiple tiles in a row or column.
+    Returns a new board if successful, or the current board otherwise.
+    */
     public Board moveTile(int row, int col) {
         if (!isValidCoordinates(row, col)) {
             return this;
         }
 
-        int emptyRow = emptyTileIndex / dimension;
-        int emptyCol = emptyTileIndex % dimension;
-        int directionRow = row - emptyRow;
-        int directionCol = col - emptyCol;
+        int emptyTileRow = emptyTileIndex / dimension;
+        int emptyTileCol = emptyTileIndex % dimension;
+        int directionRow = row - emptyTileRow;
+        int directionCol = col - emptyTileCol;
         directionRow = directionRow == 0 ? directionRow : directionRow / Math.abs(directionRow);
         directionCol = directionCol == 0 ? directionCol : directionCol / Math.abs(directionCol);
 
         Board result = this;
         if (directionRow == 0 ^ directionCol == 0) {
-            while (row != emptyRow || col != emptyCol) {
-                result = result.swapTiles(result.getEmptyTileIndex(), toIndex(emptyRow + directionRow, emptyCol + directionCol));
-                emptyRow += directionRow;
-                emptyCol += directionCol;
+            while (row != emptyTileRow || col != emptyTileCol) {
+                result = result.swapTiles(result.getEmptyTileIndex(), toIndex(emptyTileRow + directionRow, emptyTileCol + directionCol));
+                emptyTileRow += directionRow;
+                emptyTileCol += directionCol;
             }
         }
         return result;
@@ -102,9 +136,12 @@ public class Board {
         byte temp = newTiles[i1];
         newTiles[i1] = newTiles[i2];
         newTiles[i2] = temp;
-        return new Board(newTiles);
+        return new Board(newTiles, dimension, i2);
     }
 
+    /*
+     https://en.wikipedia.org/wiki/15_puzzle#Solvability
+    */
     public boolean isSolvable() {
         int parity = 0;
         int row = 0;
@@ -170,6 +207,10 @@ public class Board {
         return result;
     }
 
+    /*
+    Returns the square matrix representation.
+    Align numbers in columns so that there is exactly one whitespace between the largest numbers.
+    */
     @Override
     public String toString() {
         int width = String.valueOf(tiles.length - 1).length() + 1;
@@ -180,7 +221,7 @@ public class Board {
                 sb.append('\n');
             }
         }
-        sb.deleteCharAt(sb.length() - 1);
+        sb.deleteCharAt(sb.length() - 1); // remove last '\n'
         return sb.toString();
     }
 }
