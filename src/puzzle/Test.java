@@ -30,7 +30,7 @@ public class Test {
         Board goal = new Board(dimension);
 
         for (byte[] test : test_4) {
-            Board shuffled = new Board(dimension, test);
+            Board shuffled = new Board(test);
             System.out.println("Initial board:");
             System.out.println(shuffled);
             if (!shuffled.isSolvable()) {

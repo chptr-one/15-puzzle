@@ -7,13 +7,32 @@ public class Board {
     private final byte[] tiles;
 
     public Board(int dimension) {
+        if (dimension < 2) {
+            throw new IllegalArgumentException("Board dimension must be 2 or greater.");
+        }
         this.dimension = dimension;
-        tiles = createGoalBoard();
+        this.tiles = createGoal();
     }
 
-    public Board(int dimension, byte[] tiles) {
-        this.dimension = dimension;
+    public Board(byte[] tiles) {
+        double dim = Math.sqrt(tiles.length);
+        if (dim % 1 != 0) {
+            throw new IllegalArgumentException("Argument array is not square.");
+        }
+        if (dim < 2) {
+            throw new IllegalArgumentException("Board dimension must be 2 or greater.");
+        }
+        this.dimension = (int) dim;
         this.tiles = tiles.clone();
+    }
+
+    private byte[] createGoal() {
+        byte[] state = new byte[dimension * dimension];
+        for (byte i = 0; i < state.length; i++) {
+            state[i] = (byte) (i + 1);
+        }
+        state[state.length - 1] = 0;
+        return state;
     }
 
     public Set<Board> getSuccessors() {
@@ -67,20 +86,11 @@ public class Board {
     }
 
     private Board swapTiles(int i1, int i2) {
-        Board result = new Board(dimension, tiles);
+        Board result = new Board(tiles);
         byte temp = result.tiles[i1];
         result.tiles[i1] = result.tiles[i2];
         result.tiles[i2] = temp;
         return result;
-    }
-
-    public byte[] createGoalBoard() {
-        byte[] state = new byte[dimension * dimension];
-        for (byte i = 0; i < state.length; i++) {
-            state[i] = (byte) (i + 1);
-        }
-        state[state.length - 1] = 0;
-        return state;
     }
 
     public boolean isSolvable() {
