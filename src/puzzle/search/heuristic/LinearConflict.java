@@ -1,6 +1,6 @@
 package puzzle.search.heuristic;
 
-import puzzle.Board;
+import puzzle.common.Board;
 
 public class LinearConflict extends ManhattanDistance {
     @Override

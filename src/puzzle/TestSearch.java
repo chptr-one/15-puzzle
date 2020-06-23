@@ -1,10 +1,12 @@
 package puzzle;
 
+import puzzle.common.Board;
+import puzzle.common.BoardFactory;
 import puzzle.search.*;
 
 import java.util.List;
 
-public class Test {
+public class TestSearch {
     public static void main(String[] args) {
         byte[][] test_3 = {
                 {6, 0, 2, 5, 4, 8, 1, 3, 7},

@@ -1,4 +1,4 @@
-package puzzle;
+package puzzle.common;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,10 +47,6 @@ public class Board {
         return i;
     }
 
-    public boolean isSolvable() {
-        return isSolvable(tiles);
-    }
-
     static public boolean isSolvable(byte[] tiles) {
         int dimension = (int) Math.sqrt(tiles.length);
         int parity = 0;
@@ -75,6 +71,10 @@ public class Board {
         } else {
             return parity % 2 == 0;
         }
+    }
+
+    public boolean isSolvable() {
+        return isSolvable(tiles);
     }
 
     /*

@@ -1,6 +1,6 @@
 package puzzle.gui;
 
-import puzzle.Board;
+import puzzle.common.Board;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +22,13 @@ class BoardPanel extends JPanel {
                 makeMove(e.getX(), e.getY());
             }
         });
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+        int dimension = (TILE_SIZE + PADDING / 2) * board.getDimension() - PADDING / 2;
+        setPreferredSize(new Dimension(dimension, dimension));
+        repaint();
     }
 
     @Override

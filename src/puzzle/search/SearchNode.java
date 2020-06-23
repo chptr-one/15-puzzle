@@ -1,6 +1,6 @@
 package puzzle.search;
 
-import puzzle.Board;
+import puzzle.common.Board;
 import puzzle.search.heuristic.LinearConflict;
 
 import java.util.HashSet;

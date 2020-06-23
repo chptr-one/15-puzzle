@@ -1,4 +1,4 @@
-package puzzle;
+package puzzle.common;
 
 import java.util.concurrent.ThreadLocalRandom;
 

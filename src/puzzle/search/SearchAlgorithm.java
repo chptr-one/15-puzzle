@@ -1,6 +1,6 @@
 package puzzle.search;
 
-import puzzle.Board;
+import puzzle.common.Board;
 
 import java.util.Collections;
 import java.util.List;
