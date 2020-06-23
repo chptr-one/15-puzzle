@@ -77,7 +77,7 @@ public class Board {
     /*
     Returns the set of all boards that can be reached from the current board by making a valid move.
     A move -- is to swap exactly one tile with an adjacent empty tile.
-    There is always at least one possible move, so we return at least one board.
+    There is always at least two possible moves, so we return at least two boards.
     */
     public Set<Board> getSuccessors() {
         Set<Board> successors = new HashSet<>();
@@ -102,7 +102,7 @@ public class Board {
     /*
     If possible, tries to make a move with a tile with the given coordinates.
     Can move multiple tiles in a row or column.
-    Returns a new board if successful, or the current board otherwise.
+    Returns a new board if successful, otherwise returns the current board.
     */
     public Board moveTile(int row, int col) {
         if (!isValidCoordinates(row, col)) {
@@ -111,15 +111,22 @@ public class Board {
 
         int emptyTileRow = emptyTileIndex / dimension;
         int emptyTileCol = emptyTileIndex % dimension;
+
+        /*
+        We are trying to move an empty tile in the direction to a given tile.
+        Here we get the increment for each coordinate of empty tile separately. (1, -1 or 0)
+        */
         int directionRow = row - emptyTileRow;
         int directionCol = col - emptyTileCol;
-        directionRow = directionRow == 0 ? directionRow : directionRow / Math.abs(directionRow);
-        directionCol = directionCol == 0 ? directionCol : directionCol / Math.abs(directionCol);
+        directionRow = directionRow == 0 ? 0 : directionRow / Math.abs(directionRow);
+        directionCol = directionCol == 0 ? 0 : directionCol / Math.abs(directionCol);
 
         Board result = this;
         if (directionRow == 0 ^ directionCol == 0) {
+            // Apply the calculated increment until an empty tile takes the place of the given tile
             while (row != emptyTileRow || col != emptyTileCol) {
-                result = result.swapTiles(result.getEmptyTileIndex(), toIndex(emptyTileRow + directionRow, emptyTileCol + directionCol));
+                result = result.swapTiles(result.getEmptyTileIndex(),
+                        toIndex(emptyTileRow + directionRow, emptyTileCol + directionCol));
                 emptyTileRow += directionRow;
                 emptyTileCol += directionCol;
             }
@@ -144,26 +151,20 @@ public class Board {
     */
     public boolean isSolvable() {
         int parity = 0;
-        int row = 0;
-        int blankRow = 0;
 
-        for (int i = 0; i < tiles.length; i++) {
-            if (i % dimension == 0) {
-                row++;
-            }
-            if (tiles[i] == 0) {
-                blankRow = row;
-                continue;
-            }
-            for (int j = i + 1; j < tiles.length; j++) {
-                if (tiles[i] > tiles[j] && tiles[j] != 0) {
-                    parity++;
+        for (int i = 0; i < tiles.length - 1; i++) {
+            if (tiles[i] != 0) {
+                for (int j = i + 1; j < tiles.length; j++) {
+                    if (tiles[i] > tiles[j] && tiles[j] != 0) {
+                        parity++;
+                    }
                 }
             }
         }
-        // I need to find a better way
+
+        int emptyTileRow = emptyTileIndex / dimension + 1;
         if (dimension % 2 == 0) {
-            if (blankRow % 2 == 0) {
+            if (emptyTileRow % 2 == 0) {
                 return parity % 2 == 0;
             } else {
                 return parity % 2 != 0;
