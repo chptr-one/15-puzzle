@@ -37,6 +37,7 @@ public class ControlPanel extends JPanel {
         add(algList);
 
         shuffleJButton = new JButton("Shuffle");
+        shuffleJButton.addActionListener(e -> game.shuffle());
         solveJButton = new JButton("Solve");
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(shuffleJButton);

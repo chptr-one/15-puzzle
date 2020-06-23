@@ -3,7 +3,6 @@ package puzzle.gui;
 import puzzle.Game;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
@@ -11,7 +10,6 @@ public class MainFrame extends JFrame {
 
     private final BoardPanel boardPanel;
     private final ControlPanel controlPanel;
-    private final StatisticsPanel statisticsPanel;
 
     public MainFrame(Game game) {
         this.game = game;
@@ -19,33 +17,24 @@ public class MainFrame extends JFrame {
         setTitle("Sliding Puzzle");
         setLocationRelativeTo(null);
         setResizable(false);
-        JPanel contentPanel = new JPanel();
-        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-        contentPanel.setBorder(padding);
-        setContentPane(contentPanel);
-        setLayout(new FlowLayout());
+        JPanel borderedPanel = new JPanel();
+        int padding = 8;
+        borderedPanel.setBorder(BorderFactory.createEmptyBorder(padding, padding, padding, padding));
+        this.getContentPane().add(borderedPanel,"Center");
 
         boardPanel = new BoardPanel(game.getBoard());
-        add(boardPanel);
+        borderedPanel.add(boardPanel);
 
         controlPanel = new ControlPanel(game);
-        statisticsPanel = new StatisticsPanel();
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.add(controlPanel);
-        rightPanel.add(statisticsPanel);
-        add(rightPanel);
+        borderedPanel.add(controlPanel);
 
         pack();
         setVisible(true);
     }
 
-    public void updateBoard() {
+    public void setBoard() {
         boardPanel.setBoard(game.getBoard());
+        SwingUtilities.updateComponentTreeUI(this);
         pack();
-
-        Dimension d = new Dimension();
-        boardPanel.getSize(d);
-        System.out.println(d.getSize());
     }
 }

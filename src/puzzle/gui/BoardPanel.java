@@ -25,10 +25,9 @@ class BoardPanel extends JPanel {
     }
 
     public void setBoard(Board board) {
-        this.board = board;
         int dimension = (TILE_SIZE + PADDING / 2) * board.getDimension() - PADDING / 2;
         setPreferredSize(new Dimension(dimension, dimension));
-        repaint();
+        updateBoard(board);
     }
 
     @Override

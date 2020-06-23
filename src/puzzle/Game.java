@@ -5,20 +5,28 @@ import puzzle.common.BoardFactory;
 import puzzle.gui.MainFrame;
 
 public class Game {
+    private int dimension;
     private Board board;
     private BoardFactory boardFactory;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     public Game() {
-        boardFactory = new BoardFactory();
+        dimension = 4;
+        boardFactory = new BoardFactory(dimension);
         board = boardFactory.createGoalBoard();
         mainFrame = new MainFrame(this);
     }
 
     public void setDimension(int dimension) {
-        boardFactory = new BoardFactory(dimension);
+        this.dimension = dimension;
+        boardFactory = new BoardFactory(this.dimension);
         board = boardFactory.createGoalBoard();
-        mainFrame.updateBoard();
+        mainFrame.setBoard();
+    }
+
+    public void shuffle() {
+        board = boardFactory.createShuffledBoard();
+        mainFrame.setBoard();
     }
 
     public Board getBoard() {
