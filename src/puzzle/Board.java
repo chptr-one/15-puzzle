@@ -9,23 +9,12 @@ public class Board {
     private final byte[] tiles;
     private final int emptyTileIndex;
 
-    /*
-    Creates resolved Board of given dimension with empty tile in right-bottom corner
-    */
-    public Board(int dimension) {
-        if (dimension < 2) {
-            throw new IllegalArgumentException("Dimension must be 2 or greater.");
-        }
+    Board(byte[] tiles, int dimension, int emptyTileIndex) {
+        this.tiles = tiles;
         this.dimension = dimension;
-        this.tiles = createSolvedTiles();
-        this.emptyTileIndex = tiles.length - 1;
+        this.emptyTileIndex = emptyTileIndex;
     }
 
-    /*
-    Creates new Board from given array.
-    Array must be square with dimension 2x2 or greater,
-    and can contain only unique numbers from 0 to dimension * dimension - 1 in any order.
-    */
     public Board(byte[] tiles) {
         if (tiles == null) {
             throw new IllegalArgumentException("Argument is null.");
@@ -44,34 +33,48 @@ public class Board {
         if (!correct.equals(actual)) {
             throw new IllegalArgumentException("Array must contains unique numbers from 0 to array.length() - 1.");
         }
-        this.dimension = (int) dim;
-        this.tiles = tiles.clone();
 
-        // find an empty Tile
+        this.tiles = tiles;
+        this.dimension = (int) dim;
+        this.emptyTileIndex = findEmptyTile(tiles);
+    }
+
+    static public int findEmptyTile(byte[] tiles) {
         int i = 0;
         while (i < tiles.length && tiles[i] != 0) {
             i++;
         }
-        emptyTileIndex = i;
+        return i;
     }
 
-    /*
-    Creates new Board from given array without any arguments check.
-    Used by swapTiles() method.
-    */
-    private Board(byte[] tiles, int dimension, int emptyTileIndex) {
-        this.tiles = tiles;
-        this.dimension = dimension;
-        this.emptyTileIndex = emptyTileIndex;
+    public boolean isSolvable() {
+        return isSolvable(tiles);
     }
 
-    private byte[] createSolvedTiles() {
-        byte[] tiles = new byte[dimension * dimension];
-        for (byte i = 0; i < tiles.length; i++) {
-            tiles[i] = (byte) (i + 1);
+    static public boolean isSolvable(byte[] tiles) {
+        int dimension = (int) Math.sqrt(tiles.length);
+        int parity = 0;
+
+        for (int i = 0; i < tiles.length - 1; i++) {
+            if (tiles[i] != 0) {
+                for (int j = i + 1; j < tiles.length; j++) {
+                    if (tiles[i] > tiles[j] && tiles[j] != 0) {
+                        parity++;
+                    }
+                }
+            }
         }
-        tiles[tiles.length - 1] = 0;
-        return tiles;
+
+        int emptyTileRow = findEmptyTile(tiles) / dimension + 1;
+        if (dimension % 2 == 0) {
+            if (emptyTileRow % 2 == 0) {
+                return parity % 2 == 0;
+            } else {
+                return parity % 2 != 0;
+            }
+        } else {
+            return parity % 2 == 0;
+        }
     }
 
     /*
@@ -144,34 +147,6 @@ public class Board {
         newTiles[i1] = newTiles[i2];
         newTiles[i2] = temp;
         return new Board(newTiles, dimension, i2);
-    }
-
-    /*
-     https://en.wikipedia.org/wiki/15_puzzle#Solvability
-    */
-    public boolean isSolvable() {
-        int parity = 0;
-
-        for (int i = 0; i < tiles.length - 1; i++) {
-            if (tiles[i] != 0) {
-                for (int j = i + 1; j < tiles.length; j++) {
-                    if (tiles[i] > tiles[j] && tiles[j] != 0) {
-                        parity++;
-                    }
-                }
-            }
-        }
-
-        int emptyTileRow = emptyTileIndex / dimension + 1;
-        if (dimension % 2 == 0) {
-            if (emptyTileRow % 2 == 0) {
-                return parity % 2 == 0;
-            } else {
-                return parity % 2 != 0;
-            }
-        } else {
-            return parity % 2 == 0;
-        }
     }
 
     public int getDimension() {

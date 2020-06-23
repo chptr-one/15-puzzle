@@ -26,8 +26,8 @@ public class Test {
                 {6, 3, 0, 4, 7, 5, 15, 11, 14, 13, 1, 2, 12, 9, 8, 10},
         };
 
-        int dimension = 4;
-        Board goal = new Board(dimension);
+        BoardFactory factory = new BoardFactory();
+        Board goal = factory.createGoalBoard();
 
         for (byte[] test : test_4) {
             Board shuffled = new Board(test);
