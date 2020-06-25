@@ -10,18 +10,21 @@ import java.util.List;
 public class Game {
     private final MainFrame mainFrame;
     private Board board;
+    private Board goalBoard;
     private BoardFactory boardFactory;
     private int solverId;
 
     public Game() {
         boardFactory = new BoardFactory(4);
         board = boardFactory.createGoalBoard();
+        goalBoard = boardFactory.createGoalBoard();
         mainFrame = new MainFrame(this);
     }
 
     public void setDimension(int dimension) {
         boardFactory = new BoardFactory(dimension);
         board = boardFactory.createGoalBoard();
+        goalBoard = boardFactory.createGoalBoard();
         mainFrame.setBoard();
     }
 
@@ -35,15 +38,20 @@ public class Game {
     }
 
     public void resolve() {
-        SearchAlgorithm solver = new AStar(board, boardFactory.createGoalBoard());
+        board = mainFrame.getBoard();
+        SearchAlgorithm solver = new AStar(board, goalBoard);
         if (solverId == 1) {
-            solver = new IDAStar(board, boardFactory.createGoalBoard());
+            solver = new IDAStar(board, goalBoard);
         }
 
         List<Board> solution = solver.resolve();
+        System.out.println("Initial board: ");
+        System.out.println(board + "\n");
         for (Board b : solution) {
             System.out.println(board + "\n");
         }
+        System.out.println("Solved in " + solution.size() + " steps.");
+        System.out.println(solver.getExploredNodes() + " nodes explored." + "\n");
         mainFrame.playSolution(solution);
     }
 

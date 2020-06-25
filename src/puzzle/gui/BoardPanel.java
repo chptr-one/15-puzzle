@@ -61,6 +61,10 @@ class BoardPanel extends JPanel {
         updateBoard(board);
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public void updateBoard(Board board) {
         this.board = board;
         repaint();

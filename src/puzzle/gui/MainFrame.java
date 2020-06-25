@@ -35,11 +35,11 @@ public class MainFrame extends JFrame {
     public void playSolution(Iterable<Board> solution) {
         for (Board b : solution) {
             boardPanel.updateBoard(b);
-            try {
+            /*try {
                 Thread.sleep(300); // why it doesn't work ?!!
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 
@@ -47,5 +47,9 @@ public class MainFrame extends JFrame {
         boardPanel.setBoard(game.getBoard());
         SwingUtilities.updateComponentTreeUI(this);
         pack();
+    }
+
+    public Board getBoard() {
+        return boardPanel.getBoard();
     }
 }
