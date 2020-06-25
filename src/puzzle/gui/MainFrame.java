@@ -33,14 +33,8 @@ public class MainFrame extends JFrame {
     }
 
     public void playSolution(Iterable<Board> solution) {
-        for (Board b : solution) {
-            boardPanel.updateBoard(b);
-            /*try {
-                Thread.sleep(300); // why it doesn't work ?!!
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-        }
+        Player player = new Player(solution);
+        player.start();
     }
 
     public void setBoard() {
@@ -51,5 +45,26 @@ public class MainFrame extends JFrame {
 
     public Board getBoard() {
         return boardPanel.getBoard();
+    }
+
+    class Player extends Thread {
+        Iterable<Board> boards;
+
+        Player(Iterable<Board> boards) {
+            this.boards = boards;
+        }
+
+        @Override
+        public void run() {
+            for (Board b : boards) {
+                boardPanel.updateBoard(b);
+                try {
+                    Thread.sleep(500); // why it doesn't work ?!!
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 }
