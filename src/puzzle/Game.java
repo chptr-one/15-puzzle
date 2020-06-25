@@ -48,7 +48,7 @@ public class Game {
         System.out.println("Initial board: ");
         System.out.println(board + "\n");
         for (Board b : solution) {
-            System.out.println(board + "\n");
+            System.out.println(b + "\n");
         }
         System.out.println("Solved in " + solution.size() + " steps.");
         System.out.println(solver.getExploredNodes() + " nodes explored." + "\n");
