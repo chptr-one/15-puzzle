@@ -4,17 +4,14 @@ import puzzle.Game;
 
 import javax.swing.*;
 
-public class ControlPanel extends JPanel {
-    private Game game;
-
+class ControlPanel extends JPanel {
     private JButton shuffleJButton;
     private JButton resolveJButton;
     private JRadioButton dim3x3;
     private JRadioButton dim4x4;
     private JComboBox<String> algList;
 
-    public ControlPanel(Game game) {
-        this.game = game;
+    ControlPanel(Game game) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         dim3x3 = new JRadioButton("3 x 3");
@@ -34,7 +31,7 @@ public class ControlPanel extends JPanel {
         algList.addItem("A* search");
         algList.addItem("IDA* (Iterative deepening A*)");
         algList.setSelectedIndex(1);
-        algList.addActionListener(e->game.setSolver(((JComboBox)e.getSource()).getSelectedIndex()));
+        algList.addActionListener(e -> game.setSolver(((JComboBox) e.getSource()).getSelectedIndex()));
         add(algList);
 
         shuffleJButton = new JButton("Shuffle");

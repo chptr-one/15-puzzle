@@ -4,7 +4,8 @@ import puzzle.common.Board;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 class BoardPanel extends JPanel {
     static private final int TILE_SIZE = 80;
@@ -55,22 +56,22 @@ class BoardPanel extends JPanel {
         g.drawString(s, x, y);
     }
 
-    public void setBoard(Board board) {
+    Board getBoard() {
+        return board;
+    }
+
+    void setBoard(Board board) {
         int dimension = (TILE_SIZE + PADDING / 2) * board.getDimension() - PADDING / 2;
         setPreferredSize(new Dimension(dimension, dimension));
         updateBoard(board);
     }
 
-    public Board getBoard() {
-        return board;
-    }
-
-    public void updateBoard(Board board) {
+    void updateBoard(Board board) {
         this.board = board;
         repaint();
     }
 
-    public void makeMove(int x, int y) {
+    void makeMove(int x, int y) {
         int row = (y - PADDING / 2) / TILE_SIZE;
         int col = (x - PADDING / 2) / TILE_SIZE;
         updateBoard(board.moveTile(row, col));

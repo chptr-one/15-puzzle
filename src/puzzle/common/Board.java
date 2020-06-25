@@ -39,7 +39,7 @@ public class Board {
         this.emptyTileIndex = findEmptyTile(tiles);
     }
 
-    static public int findEmptyTile(byte[] tiles) {
+    static int findEmptyTile(byte[] tiles) {
         int i = 0;
         while (i < tiles.length && tiles[i] != 0) {
             i++;
@@ -47,7 +47,7 @@ public class Board {
         return i;
     }
 
-    static public boolean isSolvable(byte[] tiles) {
+    static boolean isSolvable(byte[] tiles) {
         int dimension = (int) Math.sqrt(tiles.length);
         int parity = 0;
 

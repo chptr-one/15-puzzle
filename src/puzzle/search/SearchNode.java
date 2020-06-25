@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.ToIntFunction;
 
-public class SearchNode implements Comparable<SearchNode> {
+class SearchNode implements Comparable<SearchNode> {
     static private final ToIntFunction<Board> HEURISTIC = new LinearConflict();
 
     private final Board board;
@@ -15,30 +15,30 @@ public class SearchNode implements Comparable<SearchNode> {
     private final int cost;
     private final int heuristic;
 
-    public SearchNode(Board board, SearchNode parent, int cost) {
+    SearchNode(Board board, SearchNode parent, int cost) {
         this.board = board;
         this.parent = parent;
         this.cost = cost;
         heuristic = HEURISTIC.applyAsInt(board);
     }
 
-    public int getHeuristic() {
+    int getHeuristic() {
         return heuristic;
     }
 
-    public SearchNode getParent() {
+    SearchNode getParent() {
         return parent;
     }
 
-    public int getCost() {
+    int getCost() {
         return cost;
     }
 
-    public Board getValue() {
+    Board getValue() {
         return board;
     }
 
-    public Set<SearchNode> getSuccessors() {
+    Set<SearchNode> getSuccessors() {
         Set<SearchNode> result = new HashSet<>();
         for (Board b : board.getSuccessors()) {
             if (parent != null && b.equals(parent.board)) {
