@@ -42,9 +42,10 @@ public class TestSearch {
 
             SearchAlgorithm solver = new IDAStar(shuffled, goal);
             long startTime = System.currentTimeMillis();
-            List<Board> solution = solver.solve();
-            /*for (Board b : solution)
-                System.out.println(b);*/
+            List<Board> solution = solver.resolve();
+            for (Board b : solution) {
+                System.out.println(b + "\n");
+            }
 
             System.out.println("solution length: " + solution.size());
             System.out.println("nodes explored: " + solver.getExploredNodes());

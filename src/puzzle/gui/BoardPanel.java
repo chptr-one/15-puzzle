@@ -24,12 +24,6 @@ class BoardPanel extends JPanel {
         });
     }
 
-    public void setBoard(Board board) {
-        int dimension = (TILE_SIZE + PADDING / 2) * board.getDimension() - PADDING / 2;
-        setPreferredSize(new Dimension(dimension, dimension));
-        updateBoard(board);
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -59,6 +53,12 @@ class BoardPanel extends JPanel {
         int x = col * TILE_SIZE + PADDING / 2 + (TILE_SIZE - metrics.stringWidth(s)) / 2;
         int y = row * TILE_SIZE + PADDING / 2 + ((TILE_SIZE - metrics.getHeight()) / 2) + metrics.getAscent();
         g.drawString(s, x, y);
+    }
+
+    public void setBoard(Board board) {
+        int dimension = (TILE_SIZE + PADDING / 2) * board.getDimension() - PADDING / 2;
+        setPreferredSize(new Dimension(dimension, dimension));
+        updateBoard(board);
     }
 
     public void updateBoard(Board board) {

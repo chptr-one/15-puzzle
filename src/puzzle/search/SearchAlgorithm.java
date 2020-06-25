@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface SearchAlgorithm {
-    List<Board> solve();
+    List<Board> resolve();
 
     long getExploredNodes();
 

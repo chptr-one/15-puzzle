@@ -8,7 +8,7 @@ public class ControlPanel extends JPanel {
     private Game game;
 
     private JButton shuffleJButton;
-    private JButton solveJButton;
+    private JButton resolveJButton;
     private JRadioButton dim3x3;
     private JRadioButton dim4x4;
     private JComboBox<String> algList;
@@ -34,14 +34,16 @@ public class ControlPanel extends JPanel {
         algList.addItem("A* search");
         algList.addItem("IDA* (Iterative deepening A*)");
         algList.setSelectedIndex(1);
+        algList.addActionListener(e->game.setSolver(((JComboBox)e.getSource()).getSelectedIndex()));
         add(algList);
 
         shuffleJButton = new JButton("Shuffle");
         shuffleJButton.addActionListener(e -> game.shuffle());
-        solveJButton = new JButton("Solve");
+        resolveJButton = new JButton("Resolve");
+        resolveJButton.addActionListener(e -> game.resolve());
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(shuffleJButton);
-        buttonPanel.add(solveJButton);
+        buttonPanel.add(resolveJButton);
         add(buttonPanel);
     }
 }

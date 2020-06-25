@@ -16,7 +16,7 @@ public class AStar implements SearchAlgorithm {
     }
 
     @Override
-    public List<Board> solve() {
+    public List<Board> resolve() {
         PriorityQueue<SearchNode> minPQ = new PriorityQueue<>();
         minPQ.add(new SearchNode(start, null, 0));
 

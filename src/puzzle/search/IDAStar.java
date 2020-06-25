@@ -16,7 +16,7 @@ public class IDAStar implements SearchAlgorithm{
     }
 
     @Override
-    public List<Board> solve() {
+    public List<Board> resolve() {
         SearchNode startNode = new SearchNode(start, null, 0);
         SearchNode endNode = null;
         int threshold = startNode.getHeuristic();

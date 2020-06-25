@@ -3,30 +3,48 @@ package puzzle;
 import puzzle.common.Board;
 import puzzle.common.BoardFactory;
 import puzzle.gui.MainFrame;
+import puzzle.search.*;
+
+import java.util.List;
 
 public class Game {
-    private int dimension;
+    private final MainFrame mainFrame;
     private Board board;
     private BoardFactory boardFactory;
-    private final MainFrame mainFrame;
+    private int solverId;
 
     public Game() {
-        dimension = 4;
-        boardFactory = new BoardFactory(dimension);
+        boardFactory = new BoardFactory(4);
         board = boardFactory.createGoalBoard();
         mainFrame = new MainFrame(this);
     }
 
     public void setDimension(int dimension) {
-        this.dimension = dimension;
-        boardFactory = new BoardFactory(this.dimension);
+        boardFactory = new BoardFactory(dimension);
         board = boardFactory.createGoalBoard();
         mainFrame.setBoard();
+    }
+
+    public void setSolver(int index) {
+        solverId = index;
     }
 
     public void shuffle() {
         board = boardFactory.createShuffledBoard();
         mainFrame.setBoard();
+    }
+
+    public void resolve() {
+        SearchAlgorithm solver = new AStar(board, boardFactory.createGoalBoard());
+        if (solverId == 1) {
+            solver = new IDAStar(board, boardFactory.createGoalBoard());
+        }
+
+        List<Board> solution = solver.resolve();
+        for (Board b : solution) {
+            System.out.println(board + "\n");
+        }
+        mainFrame.playSolution(solution);
     }
 
     public Board getBoard() {
