@@ -12,7 +12,7 @@ public class Game {
     private Board board;
     private Board goalBoard;
     private BoardFactory boardFactory;
-    private int solverId;
+    private int solverId = 1;
 
     public Game() {
         boardFactory = new BoardFactory(4);
@@ -39,10 +39,21 @@ public class Game {
 
     public void resolve() {
         board = mainFrame.getBoard();
-        SearchAlgorithm solver = new AStar(board, goalBoard);
-        if (solverId == 1) {
-            solver = new IDAStar(board, goalBoard);
+        SearchAlgorithm solver;
+        switch (solverId) {
+            case 0: {
+                solver = new AStar(board, goalBoard);
+                break;
+            }
+            case 1: {
+                solver = new IDAStar(board, goalBoard);
+                break;
+            }
+            default: {
+                solver = new IDAStar(board, goalBoard);
+            }
         }
+
 
         List<Board> solution = solver.resolve();
         System.out.println("Initial board: ");
