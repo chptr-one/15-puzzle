@@ -1,23 +1,31 @@
 package puzzle;
 
-import puzzle.common.Board;
-import puzzle.common.BoardFactory;
-import puzzle.gui.MainFrame;
+import puzzle.common.*;
 import puzzle.search.*;
+import puzzle.search.heuristic.*;
+import puzzle.gui.MainFrame;
 
 import java.util.*;
+import java.util.function.ToIntFunction;
 
 public class Game {
-    //static public final Map<String, ToIntFunction<Board>> HEURISTICS;
+    static public final List<Map.Entry<String, ToIntFunction<Board>>> HEURISTICS;
     static public final List<Map.Entry<String, SearchAlgorithm>> ALGORITHMS;
-    static private int solverId;
+    static private int algorithmId;
+    static private int heuristicId;
 
     static {
-        ALGORITHMS = List.of(
-                new AbstractMap.SimpleEntry<>("A* search", new AStar()),
-                new AbstractMap.SimpleEntry<>("IDA* search", new IDAStar())
+        HEURISTICS = List.of(
+                new AbstractMap.SimpleEntry<>("Manhattan Distance", new ManhattanDistance()),
+                new AbstractMap.SimpleEntry<>("Linear Conflict", new LinearConflict())
         );
-        solverId = 1;
+        heuristicId = 1;
+
+        ALGORITHMS = List.of(
+                new AbstractMap.SimpleEntry<>("A* search", new AStar(HEURISTICS.get(heuristicId).getValue())),
+                new AbstractMap.SimpleEntry<>("IDA* search", new IDAStar(HEURISTICS.get(heuristicId).getValue()))
+        );
+        algorithmId = 1;
     }
 
     private final MainFrame mainFrame;
@@ -39,11 +47,21 @@ public class Game {
         mainFrame.setBoard();
     }
 
-    public void setSolverId(int index) {
-        solverId = index;
+    public int getAlgorithmId() {
+        return algorithmId;
     }
 
-    public int getSolverId() {return solverId;}
+    public void setAlgorithmId(int index) {
+        algorithmId = index;
+    }
+
+    public int getHeuristicId() {
+        return heuristicId;
+    }
+
+    public void setHeuristicId(int index) {
+        heuristicId = index;
+    }
 
     public void shuffle() {
         board = boardFactory.createShuffledBoard();
@@ -52,7 +70,10 @@ public class Game {
 
     public void resolve() {
         board = mainFrame.getBoard();
-        SearchAlgorithm solver = ALGORITHMS.get(solverId).getValue();
+        ToIntFunction<Board> heuristicFunction = HEURISTICS.get(heuristicId).getValue();
+        SearchAlgorithm solver = ALGORITHMS.get(algorithmId).getValue();
+        solver.setHeuristic(heuristicFunction);
+
         List<Board> solution = solver.resolve(board, goalBoard);
         System.out.println("Initial board: ");
         System.out.println(board + "\n");

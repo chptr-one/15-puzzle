@@ -3,6 +3,7 @@ package puzzle;
 import puzzle.common.Board;
 import puzzle.common.BoardFactory;
 import puzzle.search.*;
+import puzzle.search.heuristic.LinearConflict;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class TestSearch {
                 continue;
             }
 
-            SearchAlgorithm solver = new IDAStar();
+            SearchAlgorithm solver = new IDAStar(new LinearConflict());
             long startTime = System.currentTimeMillis();
             List<Board> solution = solver.resolve(new Board(test), goal);
             for (Board b : solution) {

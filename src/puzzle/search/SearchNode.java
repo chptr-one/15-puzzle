@@ -1,25 +1,24 @@
 package puzzle.search;
 
 import puzzle.common.Board;
-import puzzle.search.heuristic.LinearConflict;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.ToIntFunction;
 
 class SearchNode implements Comparable<SearchNode> {
-    static private final ToIntFunction<Board> HEURISTIC = new LinearConflict();
-
     private final Board board;
     private final SearchNode parent;
     private final int cost;
     private final int heuristic;
+    private final ToIntFunction<Board> heuristicFunction;
 
-    SearchNode(Board board, SearchNode parent, int cost) {
+    SearchNode(Board board, SearchNode parent, int cost, ToIntFunction<Board> heuristicFunction) {
         this.board = board;
         this.parent = parent;
+        this.heuristicFunction = heuristicFunction;
         this.cost = cost;
-        heuristic = HEURISTIC.applyAsInt(board);
+        this.heuristic = heuristicFunction.applyAsInt(board);
     }
 
     int getHeuristic() {
@@ -44,7 +43,7 @@ class SearchNode implements Comparable<SearchNode> {
             if (parent != null && b.equals(parent.board)) {
                 continue;
             }
-            result.add(new SearchNode(b, this, cost + 1));
+            result.add(new SearchNode(b, this, cost + 1, heuristicFunction));
         }
         return result;
     }

@@ -1,10 +1,12 @@
 package puzzle.gui;
 
 import puzzle.Game;
+import puzzle.common.Board;
 import puzzle.search.SearchAlgorithm;
 
 import javax.swing.*;
 import java.util.Map;
+import java.util.function.ToIntFunction;
 
 class ControlPanel extends JPanel {
     ControlPanel(Game game) {
@@ -27,10 +29,19 @@ class ControlPanel extends JPanel {
         for (Map.Entry<String, SearchAlgorithm> entry : Game.ALGORITHMS) {
             algList.addItem(entry.getKey());
         }
-        algList.setSelectedIndex(game.getSolverId());
+        algList.setSelectedIndex(game.getAlgorithmId());
         //noinspection rawtypes
-        algList.addActionListener(e -> game.setSolverId(((JComboBox) e.getSource()).getSelectedIndex()));
+        algList.addActionListener(e -> game.setAlgorithmId(((JComboBox) e.getSource()).getSelectedIndex()));
         add(algList);
+
+        JComboBox<String> hList = new JComboBox<>();
+        for (Map.Entry<String, ToIntFunction<Board>> entry : Game.HEURISTICS) {
+            hList.addItem(entry.getKey());
+        }
+        hList.setSelectedIndex(game.getHeuristicId());
+        //noinspection rawtypes
+        hList.addActionListener(e -> game.setHeuristicId(((JComboBox) e.getSource()).getSelectedIndex()));
+        add(hList);
 
         JButton shuffleJButton = new JButton("Shuffle");
         shuffleJButton.addActionListener(e -> game.shuffle());

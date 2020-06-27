@@ -3,17 +3,17 @@ package puzzle.search;
 import puzzle.common.Board;
 
 import java.util.List;
+import java.util.function.ToIntFunction;
 
-public class IDAStar implements SearchAlgorithm {
-    private long exploredNodes;
+public class IDAStar extends AbstractSearchAlgorithm {
 
-    public IDAStar() {
-        exploredNodes = 0;
+    public IDAStar(ToIntFunction<Board> heuristicFunction) {
+        super(heuristicFunction);
     }
 
     @Override
     public List<Board> resolve(Board start, Board goal) {
-        SearchNode startNode = new SearchNode(start, null, 0);
+        SearchNode startNode = new SearchNode(start, null, 0, heuristicFunction);
         SearchNode endNode = null;
         int threshold = startNode.getHeuristic();
 
@@ -26,11 +26,6 @@ public class IDAStar implements SearchAlgorithm {
         System.out.println();
 
         return getSolution(endNode);
-    }
-
-    @Override
-    public long getExploredNodes() {
-        return exploredNodes;
     }
 
     private SearchNode depthFirstSearch(SearchNode current, int threshold, Board goal) {

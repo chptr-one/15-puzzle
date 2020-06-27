@@ -60,11 +60,10 @@ public class MainFrame extends JFrame {
             for (Board b : boards) {
                 boardPanel.updateBoard(b);
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(350);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
             }
         }
     }
