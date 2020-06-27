@@ -4,19 +4,15 @@ import puzzle.common.Board;
 
 import java.util.List;
 
-public class IDAStar implements SearchAlgorithm{
-    private final Board start;
-    private final Board goal;
+public class IDAStar implements SearchAlgorithm {
     private long exploredNodes;
 
-    public IDAStar(Board start, Board goal) {
-        this.start = start;
-        this.goal = goal;
+    public IDAStar() {
         exploredNodes = 0;
     }
 
     @Override
-    public List<Board> resolve() {
+    public List<Board> resolve(Board start, Board goal) {
         SearchNode startNode = new SearchNode(start, null, 0);
         SearchNode endNode = null;
         int threshold = startNode.getHeuristic();

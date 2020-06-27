@@ -1,8 +1,10 @@
 package puzzle.gui;
 
 import puzzle.Game;
+import puzzle.search.SearchAlgorithm;
 
 import javax.swing.*;
+import java.util.Map;
 
 class ControlPanel extends JPanel {
     private JButton shuffleJButton;
@@ -28,10 +30,11 @@ class ControlPanel extends JPanel {
         add(dimPanel);
 
         JComboBox<String> algList = new JComboBox<>();
-        algList.addItem("A* search");
-        algList.addItem("IDA* (Iterative deepening A*)");
-        algList.setSelectedIndex(1);
-        algList.addActionListener(e -> game.setSolver(((JComboBox) e.getSource()).getSelectedIndex()));
+        for (Map.Entry<String, SearchAlgorithm> entry : Game.ALGORITHMS) {
+            algList.addItem(entry.getKey());
+        }
+        algList.setSelectedIndex(game.getSolverId());
+        algList.addActionListener(e -> game.setSolverId(((JComboBox) e.getSource()).getSelectedIndex()));
         add(algList);
 
         shuffleJButton = new JButton("Shuffle");

@@ -5,18 +5,14 @@ import puzzle.common.Board;
 import java.util.*;
 
 public class AStar implements SearchAlgorithm {
-    private final Board start;
-    private final Board goal;
     private long exploredNodes;
 
-    public AStar(Board start, Board goal) {
-        this.start = start;
-        this.goal = goal;
+    public AStar() {
         exploredNodes = 0;
     }
 
     @Override
-    public List<Board> resolve() {
+    public List<Board> resolve(Board start, Board goal) {
         PriorityQueue<SearchNode> minPQ = new PriorityQueue<>();
         minPQ.add(new SearchNode(start, null, 0));
 

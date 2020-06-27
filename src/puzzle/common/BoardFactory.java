@@ -37,6 +37,7 @@ public class BoardFactory {
         }
         int emptyTileIndex = Board.findEmptyTile(tiles);
 
+        // Any unsolvable board turns into a solvable one if you swap two adjacent nonzero tiles
         if (!Board.isSolvable(tiles)) {
             if (emptyTileIndex >= 2) {
                 byte temp = tiles[0];

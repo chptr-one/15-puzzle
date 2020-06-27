@@ -40,9 +40,9 @@ public class TestSearch {
                 continue;
             }
 
-            SearchAlgorithm solver = new IDAStar(shuffled, goal);
+            SearchAlgorithm solver = new IDAStar();
             long startTime = System.currentTimeMillis();
-            List<Board> solution = solver.resolve();
+            List<Board> solution = solver.resolve(new Board(test), goal);
             for (Board b : solution) {
                 System.out.println(b + "\n");
             }
