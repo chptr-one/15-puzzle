@@ -9,6 +9,7 @@ public class MainFrame extends JFrame {
     private final Game game;
 
     private final BoardPanel boardPanel;
+    @SuppressWarnings("FieldCanBeLocal")
     private final ControlPanel controlPanel;
 
     public MainFrame(Game game) {
@@ -48,7 +49,7 @@ public class MainFrame extends JFrame {
     }
 
     class Player extends Thread {
-        Iterable<Board> boards;
+        final Iterable<Board> boards;
 
         Player(Iterable<Board> boards) {
             this.boards = boards;

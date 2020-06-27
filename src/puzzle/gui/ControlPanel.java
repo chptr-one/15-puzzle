@@ -7,18 +7,12 @@ import javax.swing.*;
 import java.util.Map;
 
 class ControlPanel extends JPanel {
-    private JButton shuffleJButton;
-    private JButton resolveJButton;
-    private JRadioButton dim3x3;
-    private JRadioButton dim4x4;
-    private JComboBox<String> algList;
-
     ControlPanel(Game game) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        dim3x3 = new JRadioButton("3 x 3");
+        JRadioButton dim3x3 = new JRadioButton("3 x 3");
         dim3x3.addActionListener(e -> game.setDimension(3));
-        dim4x4 = new JRadioButton("4 x 4", true);
+        JRadioButton dim4x4 = new JRadioButton("4 x 4", true);
         dim4x4.addActionListener(e -> game.setDimension(4));
         ButtonGroup dimButtonsGroup = new ButtonGroup();
         dimButtonsGroup.add(dim3x3);
@@ -34,12 +28,13 @@ class ControlPanel extends JPanel {
             algList.addItem(entry.getKey());
         }
         algList.setSelectedIndex(game.getSolverId());
+        //noinspection rawtypes
         algList.addActionListener(e -> game.setSolverId(((JComboBox) e.getSource()).getSelectedIndex()));
         add(algList);
 
-        shuffleJButton = new JButton("Shuffle");
+        JButton shuffleJButton = new JButton("Shuffle");
         shuffleJButton.addActionListener(e -> game.shuffle());
-        resolveJButton = new JButton("Resolve");
+        JButton resolveJButton = new JButton("Resolve");
         resolveJButton.addActionListener(e -> game.resolve());
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(shuffleJButton);

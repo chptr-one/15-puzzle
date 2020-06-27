@@ -18,6 +18,7 @@ public class AStar implements SearchAlgorithm {
 
         while (!minPQ.isEmpty() && !minPQ.peek().getValue().equals(goal)) {
             SearchNode minNode = minPQ.poll();
+            assert minNode != null;
             for (SearchNode node : minNode.getSuccessors()) {
                 minPQ.add(node);
                 exploredNodes++;

@@ -6,6 +6,7 @@ import puzzle.search.*;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class TestSearch {
     public static void main(String[] args) {
         byte[][] test_3 = {
