@@ -19,7 +19,7 @@ class BoardPanel extends JPanel {
         setBackground(Color.LIGHT_GRAY);
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mouseReleased(MouseEvent e) {
                 makeMove(e.getX(), e.getY());
             }
         });

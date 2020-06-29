@@ -2,8 +2,7 @@ package puzzle.search;
 
 import puzzle.common.Board;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.ToIntFunction;
 
 class SearchNode implements Comparable<SearchNode> {
@@ -37,8 +36,8 @@ class SearchNode implements Comparable<SearchNode> {
         return board;
     }
 
-    Set<SearchNode> getSuccessors() {
-        Set<SearchNode> result = new HashSet<>();
+    List<SearchNode> getSuccessors() {
+        List<SearchNode> result = new ArrayList<>(3);
         for (Board b : board.getSuccessors()) {
             if (parent != null && b.equals(parent.board)) {
                 continue;
